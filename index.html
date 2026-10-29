@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrowthPilot | Campaign Command Center</title>
+<style>
+:root{--navy:#151a35;--purple:#6658e8;--purple2:#8b7fff;--bg:#f5f6fc;--text:#202642;--muted:#77809a;--line:#e8eaf3;--green:#159b72;--orange:#d58a21;--red:#d94f63}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:100vh}
+aside{background:var(--navy);color:#fff;padding:27px 17px;display:flex;flex-direction:column;gap:28px}
+.brand{display:flex;gap:11px;align-items:center;padding:0 10px}.brand-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#8c7dff,#5b4cdb);font-size:22px}.brand h1{font-size:19px;margin:0}.brand small{color:#aab1d3;font-size:11px}
+.nav-label{color:#7f88b1;font-size:10px;letter-spacing:1.5px;padding:0 12px;margin-bottom:7px}
+nav{display:grid;gap:6px}nav button{border:0;background:transparent;color:#bdc3df;text-align:left;padding:12px;border-radius:10px;display:flex;align-items:center;gap:12px}nav button.active,nav button:hover{background:#2a3055;color:white}nav .ico{width:20px;text-align:center}
+.sidebar-bottom{margin-top:auto;background:#202648;border:1px solid #353c66;border-radius:13px;padding:15px}.sidebar-bottom strong{font-size:13px}.sidebar-bottom p{color:#b7bfdf;font-size:12px;line-height:1.5;margin-bottom:0}
+main{min-width:0;padding:27px clamp(16px,3vw,38px) 34px}.topbar{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:25px}.eyebrow{color:var(--purple);font-size:11px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase}.topbar h2{margin:5px 0 0;font-size:25px}.top-actions{display:flex;align-items:center;gap:10px}.pill{font-size:11px;font-weight:700;background:#fff0d4;color:#8a5a06;border:1px solid #f5dfad;padding:8px 11px;border-radius:30px}.avatar{display:grid;place-items:center;background:#e4e0ff;color:#5346ca;border-radius:50%;width:38px;height:38px;font-weight:800}
+.view{display:none}.view.active{display:block}.notice{background:#fff8e9;border:1px solid #f4e3bd;color:#78520b;border-radius:11px;padding:12px 15px;font-size:12px;margin-bottom:18px;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}.card{background:white;border:1px solid #edf0f7;border-radius:16px;padding:19px;box-shadow:0 5px 20px #1c275008;min-width:0}.metric-head{display:flex;justify-content:space-between;align-items:center;gap:8px;color:var(--muted);font-size:12px}.metric-icon{width:34px;height:34px;display:grid;place-items:center;background:#f0eeff;color:var(--purple);border-radius:10px;font-size:17px}.metric-value{font-size:27px;font-weight:800;letter-spacing:-.7px;margin:15px 0 6px}.metric-foot{font-size:11px;color:var(--muted)}.positive{color:var(--green);font-weight:700}.accent{color:var(--purple)}
+.section-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(270px,1fr);gap:16px;margin-top:17px}.section-title{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:15px}.section-title h3{font-size:15px;margin:0}.section-title p{font-size:11px;color:var(--muted);margin:5px 0 0}.mini-tag{font-size:10px;color:#5d50cf;background:#f0eeff;padding:6px 8px;border-radius:7px;font-weight:700}
+.progress-track{height:9px;background:#eeeff7;border-radius:20px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--purple),#9d91ff);border-radius:20px;transition:width .25s}.progress-line{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin:9px 0 18px}
+.channel-list{display:grid;gap:17px}.channel-row{display:grid;grid-template-columns:105px minmax(50px,1fr) 45px;align-items:center;gap:10px;font-size:12px}.channel-row .name{font-weight:650}.channel-row .bar{height:8px;background:#f0f1f8;border-radius:12px;overflow:hidden}.channel-row .bar span{display:block;height:100%;border-radius:12px;background:var(--purple)}.channel-row .val{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.chart{width:100%;height:190px;display:block}.legend{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:6px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--purple);margin-right:5px}.dot.gray{background:#c9cde0}
+form{display:grid;gap:11px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.field{display:grid;gap:6px}.field label{font-size:11px;color:#626b86;font-weight:700}.field input,.field select,.field textarea{width:100%;border:1px solid #dfe3ef;border-radius:9px;padding:11px 12px;background:white;color:var(--text);outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #6658e81a}.field textarea{min-height:90px;resize:vertical}
+.btn{border:0;background:var(--purple);color:#fff;padding:11px 14px;border-radius:9px;font-size:12px;font-weight:750}.btn:hover{background:#5244d2}.btn.secondary{background:#f0eeff;color:#5548ce}.btn.ghost{background:#fff;color:#5d6680;border:1px solid var(--line)}.btn.danger{background:#fff0f2;color:var(--red)}.btn-row{display:flex;gap:8px;flex-wrap:wrap}.btn-row .btn{width:auto}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:470px}th,td{text-align:left;padding:12px 9px;border-bottom:1px solid #edf0f7;font-size:12px}th{font-size:10px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}td strong{font-size:12px}.rank{display:inline-grid;place-items:center;width:25px;height:25px;border-radius:8px;background:#f1efff;color:#5c4ed1;font-weight:800}.empty{text-align:center;color:var(--muted);padding:20px}
+.ai-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(270px,.9fr);gap:17px}.ai-banner{background:linear-gradient(125deg,#272653,#5b4ed1);color:#fff;border-radius:16px;padding:22px;margin-bottom:16px}.ai-banner h3{margin:0 0 8px;font-size:19px}.ai-banner p{font-size:12px;color:#d8d5ff;line-height:1.6;margin:0}.output{background:#f8f8ff;border:1px solid #e5e3ff;border-radius:12px;padding:16px;min-height:170px;white-space:pre-wrap;font-size:13px;line-height:1.65;color:#333653}.output.placeholder{color:#8a91a8}
+.insight{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid #edf0f7}.insight:last-child{border-bottom:0}.insight-icon{width:33px;height:33px;flex:0 0 33px;border-radius:10px;background:#eefaf5;color:var(--green);display:grid;place-items:center}.insight strong{font-size:12px}.insight p{font-size:11px;color:var(--muted);line-height:1.5;margin:5px 0 0}
+.budget-line{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin:16px 0 8px}.budget-line strong{font-size:13px}.expense-list{display:grid;gap:8px;margin-top:14px}.expense-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px;background:#fafaff;border-radius:9px;font-size:12px}.expense-item button{border:0;background:transparent;color:var(--red);font-size:11px}
+.channel-edit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.channel-edit{border:1px solid var(--line);border-radius:11px;padding:12px}.channel-edit label{font-size:11px;font-weight:700;display:block;margin-bottom:8px}.channel-edit input{width:100%;padding:9px;border:1px solid #dfe3ef;border-radius:8px}
+.toast{position:fixed;bottom:20px;right:20px;background:#202642;color:white;padding:12px 16px;border-radius:10px;font-size:12px;box-shadow:0 8px 30px #10152b30;display:none;z-index:9}
+footer{padding:25px 0 0;color:#8a91a8;font-size:11px;text-align:center}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.section-grid,.ai-layout{grid-template-columns:1fr}}
+@media(max-width:680px){.app{grid-template-columns:1fr}aside{padding:13px;gap:12px}.brand{padding:0 4px}nav{grid-template-columns:repeat(3,minmax(0,1fr))}nav button{font-size:11px;justify-content:center;flex-direction:column;gap:4px;padding:8px}.nav-label,.sidebar-bottom{display:none}main{padding:18px 13px}.topbar{align-items:flex-start}.topbar h2{font-size:21px}.pill{display:none}.grid{gap:9px}.card{padding:14px}.metric-value{font-size:23px}.form-grid,.channel-edit-grid{grid-template-columns:1fr}.channel-row{grid-template-columns:90px minmax(35px,1fr) 38px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><div class="brand-icon">✦</div><div><h1>GrowthPilot</h1><small>CAMPAIGN COMMAND CENTER</small></div></div>
+  <div><div class="nav-label">WORKSPACE</div>
+    <nav>
+      <button class="active" data-view="dashboard"><span class="ico">▦</span>Dashboard</button>
+      <button data-view="assistant"><span class="ico">✧</span>AI Assistant</button>
+      <button data-view="referrals"><span class="ico">♧</span>Referrals</button>
+      <button data-view="budget"><span class="ico">₹</span>Budget planner</button>
+      <button data-view="insights"><span class="ico">↗</span>Insights</button>
+    </nav>
+  </div>
+  <div class="sidebar-bottom"><strong>🎯 Campaign goal</strong><p>Reach 500 final-year engineering students in 7 days with a ₹2,000 budget.</p></div>
+</aside>
+<main>
+  <div class="topbar"><div><div class="eyebrow">Growth workspace / October campaign</div><h2 id="pageTitle">Campaign overview</h2></div><div class="top-actions"><span class="pill">● DEMO DATA</span><div class="avatar">GP</div></div></div>
+
+  <div class="notice"><strong>Demo mode:</strong> All entries and results are illustrative. This prototype does not connect to a live registration form, verify real students, or call an external AI service.</div>
+
+  <section id="dashboard" class="view active">
+    <div class="grid">
+      <div class="card"><div class="metric-head">Registration target <span class="metric-icon">◎</span></div><div class="metric-value">500</div><div class="metric-foot">Goal over 7 campaign days</div></div>
+      <div class="card"><div class="metric-head">Demo registrations <span class="metric-icon">♧</span></div><div class="metric-value accent" id="totalMetric">0</div><div class="metric-foot" id="targetFoot">0% of target reached</div></div>
+      <div class="card"><div class="metric-head">Budget used <span class="metric-icon">₹</span></div><div class="metric-value" id="spentMetric">₹0</div><div class="metric-foot" id="budgetFoot">₹2,000 available</div></div>
+      <div class="card"><div class="metric-head">Cost per demo registration <span class="metric-icon">↗</span></div><div class="metric-value" id="cprMetric">—</div><div class="metric-foot">Spend ÷ demo registrations</div></div>
+    </div>
+    <div class="section-grid">
+      <div class="card"><div class="section-title"><div><h3>Registration progress</h3><p>Illustrative progress toward your 500-student goal</p></div><span class="mini-tag" id="percentTag">0%</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 8px"><strong style="font-size:24px" id="progressNumber">0 <span style="font-size:12px;color:var(--muted);font-weight:500">/ 500</span></strong><span class="small" id="leftToGo">500 to go</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
+        <div class="progress-line"><span>Campaign start</span><span>Target: 500</span></div>
+        <div class="section-title" style="margin-top:25px"><div><h3>Channel performance</h3><p>Demo referrals by acquisition channel</p></div></div>
+        <div class="channel-list" id="channelBars"></div>
+      </div>
+      <div class="card"><div class="section-title"><div><h3>Campaign mix</h3><p>Share of demo referrals by channel</p></div><span class="mini-tag">CHANNELS</span></div>
+        <svg class="chart" viewBox="0 0 320 190" role="img" aria-label="Bar chart of demo registrations by channel" id="channelChart"></svg>
+        <div class="legend"><span><i class="dot"></i>Demo registrations</span><span><i class="dot gray"></i>Remaining to target</span></div>
+        <div style="margin-top:20px;padding:13px;border-radius:10px;background:#f8f7ff"><div class="small">Next recommended action</div><strong id="nextAction" style="display:block;font-size:12px;margin-top:5px">Add demo data to generate campaign insights.</strong></div>
+      </div>
+    </div>
+    <div class="section-grid">
+      <div class="card"><div class="section-title"><div><h3>Top ambassadors</h3><p>Ranked by illustrative referral count</p></div><button class="btn secondary" onclick="showView('referrals')">View all</button></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Ambassador</th><th>Channel</th><th>Referrals</th></tr></thead><tbody id="topTable"></tbody></table></div></div>
+      <div class="card"><div class="section-title"><div><h3>Budget health</h3><p>Spending against ₹2,000 cap</p></div></div><div class="budget-line"><span>Spent</span><strong id="spentLabel">₹0 / ₹2,000</strong></div><div class="progress-track"><div class="progress-fill" id="budgetBar"></div></div><div class="progress-line"><span id="budgetPercent">0% used</span><span id="budgetLeft">₹2,000 left</span></div><button class="btn secondary" style="width:100%;margin-top:8px" onclick="showView('budget')">Manage campaign budget</button></div>
+    </div>
+  </section>
+
+  <section id="assistant" class="view">
+    <div class="ai-banner"><h3>✧ AI Campaign Assistant</h3><p>Create tailored promotional copy for the “Build Your First AI Project in 60 Minutes” workshop. This local prototype uses prompt-based templates—no external AI API is connected.</p></div>
+    <div class="ai-layout">
+      <div class="card"><div class="section-title"><div><h3>Generate campaign content</h3><p>Choose an audience and message type</p></div><span class="mini-tag">CONTENT STUDIO</span></div>
+        <form id="contentForm">
+          <div class="field"><label for="contentType">Content type</label><select id="contentType"><option value="whatsapp">WhatsApp group message</option><option value="instagram">Instagram caption</option><option value="ambassador">Student ambassador outreach</option><option value="reminder">Registration reminder</option><option value="linkedin">LinkedIn post</option></select></div>
+          <div class="field"><label for="audience">Target audience</label><select id="audience"><option value="final-year engineering students">Final-year engineering students</option><option value="students who are new to AI">Students new to AI</option><option value="students preparing for placements">Students preparing for placements</option><option value="college student ambassadors">College student ambassadors</option></select></div>
+          <div class="field"><label for="tone">Tone</label><select id="tone"><option value="friendly and energetic">Friendly and energetic</option><option value="professional and clear">Professional and clear</option><option value="short and catchy">Short and catchy</option></select></div>
+          <div class="field"><label for="link">Workshop registration link (optional)</label><input id="link" placeholder="Paste the real registration link"></div>
+          <button class="btn" type="submit">✧ Generate campaign copy</button>
+        </form>
+      </div>
+      <div class="card"><div class="section-title"><div><h3>Generated draft</h3><p>Review and edit before sharing</p></div><span class="mini-tag">DRAFT</span></div><div id="contentOutput" class="output placeholder">Your campaign message will appear here. Add the real workshop link before publishing.</div><div class="btn-row" style="margin-top:12px"><button id="copyContent" class="btn secondary" type="button">Copy text</button><button id="clearContent" class="btn ghost" type="button">Clear</button></div><p class="small" style="margin-top:13px">AI learning note: test different prompts and record which wording you accepted or changed. This is a template-based prototype, not a live generative AI integration.</p></div>
+    </div>
+    <div class="card" style="margin-top:17px"><div class="section-title"><div><h3>Prompt notes</h3><p>Use these as a starting point for your AI learning log</p></div></div><div class="insight"><div class="insight-icon">1</div><div><strong>Prompt goal</strong><p>Write a clear invitation for a free 60-minute AI project workshop, aimed at final-year engineering students.</p></div></div><div class="insight"><div class="insight-icon">2</div><div><strong>What to evaluate</strong><p>Is the message clear, short, audience-relevant, honest about the event, and does it include a call to action?</p></div></div><div class="insight"><div class="insight-icon">3</div><div><strong>Human review</strong><p>Check claims, date, delivery mode, registration link, and event details before sending. Do not invent missing event information.</p></div></div></div>
+  </section>
+
+  <section id="referrals" class="view">
+    <div class="section-grid" style="margin-top:0">
+      <div class="card"><div class="section-title"><div><h3>Add a demo referral</h3><p>Use fictional sample records for the presentation</p></div></div>
+        <form id="referralForm">
+          <div class="field"><label for="student">Student / ambassador name</label><input id="student" placeholder="e.g. Demo Ambassador A" required maxlength="70"></div>
+          <div class="form-grid"><div class="field"><label for="code">Referral code</label><input id="code" placeholder="e.g. CAMPUS01" required maxlength="24"></div><div class="field"><label for="count">Demo registrations</label><input id="count" type="number" min="1" max="500" placeholder="e.g. 25" required></div></div>
+          <div class="field"><label for="channel">Acquisition channel</label><select id="channel"><option>Student ambassadors</option><option>WhatsApp communities</option><option>Instagram / LinkedIn</option><option>Peer referrals</option></select></div>
+          <button class="btn" type="submit">＋ Add demo referral</button>
+        </form>
+      </div>
+      <div class="card"><div class="section-title"><div><h3>Referral quality checklist</h3><p>Before using live campaign data</p></div></div><div class="insight"><div class="insight-icon">✓</div><div><strong>Count unique registrations</strong><p>Deduplicate entries before reporting results.</p></div></div><div class="insight"><div class="insight-icon">✓</div><div><strong>Track source consistently</strong><p>Use a distinct referral code or campaign UTM for each channel.</p></div></div><div class="insight"><div class="insight-icon">✓</div><div><strong>Respect student consent</strong><p>Share messages only in relevant groups with permission.</p></div></div></div>
+    </div>
+    <div class="card" style="margin-top:17px"><div class="section-title"><div><h3>Referral leaderboard</h3><p>Sorted by demo registration count</p></div><button class="btn danger" id="resetReferrals" type="button">Reset referrals</button></div><div class="table-wrap"><table><thead><tr><th>Rank</th><th>Ambassador</th><th>Referral code</th><th>Channel</th><th>Registrations</th><th>Action</th></tr></thead><tbody id="leaderboard"></tbody></table></div></div>
+  </section>
+
+  <section id="budget" class="view">
+    <div class="grid">
+      <div class="card"><div class="metric-head">Total budget <span class="metric-icon">₹</span></div><div class="metric-value">₹2,000</div><div class="metric-foot">Proposed campaign cap</div></div>
+      <div class="card"><div class="metric-head">Recorded spend <span class="metric-icon">↗</span></div><div class="metric-value" id="budgetSpentBig">₹0</div><div class="metric-foot">Entered expenses only</div></div>
+      <div class="card"><div class="metric-head">Budget remaining <span class="metric-icon">◎</span></div><div class="metric-value" id="budgetRemainingBig">₹2,000</div><div class="metric-foot">Available before cap</div></div>
+      <div class="card"><div class="metric-head">Spend rate <span class="metric-icon">%</span></div><div class="metric-value" id="spendRateBig">0%</div><div class="metric-foot">Of total budget</div></div>
+    </div>
+    <div class="section-grid">
+      <div class="card"><div class="section-title"><div><h3>Record an expense</h3><p>Enter actual or planned costs and label them honestly</p></div></div>
+        <form id="budgetForm"><div class="field"><label for="expenseName">Expense description</label><input id="expenseName" placeholder="e.g. Social media promotion" required maxlength="80"></div><div class="form-grid"><div class="field"><label for="expenseAmount">Amount (₹)</label><input id="expenseAmount" type="number" min="1" step="1" placeholder="800" required></div><div class="field"><label for="expenseType">Record type</label><select id="expenseType"><option>Planned</option><option>Actual</option></select></div></div><button class="btn" type="submit">＋ Add expense</button></form>
+      </div>
+      <div class="card"><div class="section-title"><div><h3>Suggested budget allocation</h3><p>Proposed split—not actual expenditure</p></div></div><div class="channel-list"><div class="channel-row"><span class="name">Social promotion</span><div class="bar"><span style="width:40%"></span></div><span class="val">₹800</span></div><div class="channel-row"><span class="name">Creative assets</span><div class="bar"><span style="width:15%;background:#20a982"></span></div><span class="val">₹300</span></div><div class="channel-row"><span class="name">Campus materials</span><div class="bar"><span style="width:25%;background:#e7a13b"></span></div><span class="val">₹500</span></div><div class="channel-row"><span class="name">Contingency</span><div class="bar"><span style="width:20%;background:#8b91aa"></span></div><span class="val">₹400</span></div></div></div>
+    </div>
+    <div class="card" style="margin-top:17px"><div class="section-title"><div><h3>Expense log</h3><p>Recorded items within the campaign budget</p></div></div><div id="expenseList" class="expense-list"><div class="empty">No expenses recorded yet.</div></div></div>
+  </section>
+
+  <section id="insights" class="view">
+    <div class="grid">
+      <div class="card"><div class="metric-head">Best demo channel <span class="metric-icon">★</span></div><div class="metric-value" style="font-size:20px" id="bestChannel">—</div><div class="metric-foot">Highest count in sample data</div></div>
+      <div class="card"><div class="metric-head">Registrations needed <span class="metric-icon">◎</span></div><div class="metric-value" id="neededMetric">500</div><div class="metric-foot">To reach the 500 target</div></div>
+      <div class="card"><div class="metric-head">Average per day <span class="metric-icon">↗</span></div><div class="metric-value" id="dailyMetric">71.4</div><div class="metric-foot">Planning pace over 7 days</div></div>
+      <div class="card"><div class="metric-head">Estimated cost / signup <span class="metric-icon">₹</span></div><div class="metric-value" id="insightCPR">—</div><div class="metric-foot">Only if demo spend and counts are entered</div></div>
+    </div>
+    <div class="section-grid">
+      <div class="card"><div class="section-title"><div><h3>Actionable campaign insights</h3><p>Rules-based insights from the current demo entries</p></div></div><div id="insightList"></div></div>
+      <div class="card"><div class="section-title"><div><h3>7-day execution plan</h3><p>Recommended sequence for the campaign</p></div></div><div class="insight"><div class="insight-icon">1</div><div><strong>Day 1 — Prepare</strong><p>Finalize the workshop details, registration link, tracking codes, and creative.</p></div></div><div class="insight"><div class="insight-icon">2</div><div><strong>Day 2 — Activate ambassadors</strong><p>Invite student volunteers and share a ready-to-use message pack.</p></div></div><div class="insight"><div class="insight-icon">3</div><div><strong>Days 3–4 — Publish and measure</strong><p>Share with permission in relevant communities and compare source counts.</p></div></div><div class="insight"><div class="insight-icon">4</div><div><strong>Days 5–7 — Optimize</strong><p>Focus effort on channels producing verified registrations; send a respectful final reminder.</p></div></div></div>
+    </div>
+    <div class="card" style="margin-top:17px"><div class="section-title"><div><h3>Export demo report</h3><p>Download the current sample records as a CSV file</p></div></div><button class="btn" id="exportBtn" type="button">↓ Export campaign CSV</button> <button class="btn ghost" id="resetAll" type="button">Reset all demo data</button></div>
+  </section>
+  <footer>GrowthPilot · Student growth campaign prototype · Demo data only</footer>
+</main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const $ = id => document.getElementById(id);
+const TARGET = 500, BUDGET = 2000;
+let referrals = [];
+let expenses = [];
+let currentView = "dashboard";
+const money = n => "₹" + Number(n).toLocaleString("en-IN");
+const esc = value => String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[ch]);
+const channels = ["Student ambassadors","WhatsApp communities","Instagram / LinkedIn","Peer referrals"];
+function totalRegistrations(){return referrals.reduce((s,r)=>s+r.count,0)}
+function totalSpent(){return expenses.reduce((s,e)=>s+e.amount,0)}
+function byChannel(){return channels.map(name=>({name,count:referrals.filter(r=>r.channel===name).reduce((s,r)=>s+r.count,0)}))}
+function toast(msg){const el=$("toast");el.textContent=msg;el.style.display="block";clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.style.display="none",2600)}
+function showView(name){currentView=name;document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===name));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===name));const titles={dashboard:"Campaign overview",assistant:"AI campaign assistant",referrals:"Referral management",budget:"Budget planner",insights:"Campaign insights"};$("pageTitle").textContent=titles[name]||"GrowthPilot";if(name==="insights")renderInsights();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+function render(){
+ const total=totalRegistrations(),spent=totalSpent(),remaining=BUDGET-spent,percent=Math.min(100,total/TARGET*100),spendPct=spent/BUDGET*100;
+ $("totalMetric").textContent=total.toLocaleString("en-IN");$("targetFoot").textContent=percent.toFixed(1)+"% of target reached";
+ $("spentMetric").textContent=money(spent);$("budgetFoot").textContent=money(remaining)+" available";
+ $("cprMetric").textContent=total?money(spent/total):"—";
+ $("progressNumber").innerHTML=total.toLocaleString("en-IN")+' <span style="font-size:12px;color:var(--muted);font-weight:500">/ 500</span>';
+ $("leftToGo").textContent=Math.max(0,TARGET-total).toLocaleString("en-IN")+" to go";
+ $("progressBar").style.width=percent+"%";$("percentTag").textContent=percent.toFixed(1)+"%";
+ $("budgetBar").style.width=Math.min(100,spendPct)+"%";$("spentLabel").textContent=money(spent)+" / "+money(BUDGET);$("budgetPercent").textContent=spendPct.toFixed(1)+"% used";$("budgetLeft").textContent=money(remaining)+" left";
+ $("budgetSpentBig").textContent=money(spent);$("budgetRemainingBig").textContent=money(remaining);$("spendRateBig").textContent=spendPct.toFixed(1)+"%";
+ $("neededMetric").textContent=Math.max(0,TARGET-total);$("dailyMetric").textContent=(Math.max(0,TARGET-total)/7).toFixed(1);$("insightCPR").textContent=total?money(spent/total):"—";
+ const data=byChannel(),max=Math.max(1,...data.map(x=>x.count));
+ $("channelBars").innerHTML=data.map((d,i)=>`<div class="channel-row"><span class="name">${esc(d.name)}</span><div class="bar"><span style="width:${d.count/max*100}%;background:${["#6658e8","#20a982","#e7a13b","#8b91aa"][i]}"></span></div><span class="val">${d.count}</span></div>`).join("");
+ $("channelChart").innerHTML=`<line x1="35" y1="155" x2="305" y2="155" stroke="#e8eaf3"/><line x1="35" y1="25" x2="35" y2="155" stroke="#e8eaf3"/>`+data.map((d,i)=>{let h=d.count?Math.max(4,d.count/max*105):3,x=52+i*64,y=155-h;return `<rect x="${x}" y="${y}" width="34" height="${h}" rx="5" fill="${["#6658e8","#20a982","#e7a13b","#8b91aa"][i]}" opacity="${d.count?1:.35}"/><text x="${x+17}" y="${Math.max(14,y-6)}" font-size="10" text-anchor="middle" fill="#69718c">${d.count}</text><text x="${x+17}" y="174" font-size="9" text-anchor="middle" fill="#77809a">${["Ambass.","WhatsApp","Social","Peers"][i]}</text>`}).join("");
+ const ranked=[...referrals].sort((a,b)=>b.count-a.count);
+ $("topTable").innerHTML=ranked.length?ranked.slice(0,4).map((r,i)=>`<tr><td><span class="rank">${i+1}</span></td><td><strong>${esc(r.name)}</strong></td><td>${esc(r.channel)}</td><td>${r.count}</td></tr>`).join(""):'<tr><td colspan="4" class="empty">No demo referrals yet. Add a sample referral to see the dashboard update.</td></tr>';
+ $("leaderboard").innerHTML=ranked.length?ranked.map((r,i)=>`<tr><td><span class="rank">${i+1}</span></td><td><strong>${esc(r.name)}</strong></td><td>${esc(r.code)}</td><td>${esc(r.channel)}</td><td>${r.count}</td><td><button class="btn danger" style="padding:7px 9px" onclick="deleteReferral('${r.id}')">Delete</button></td></tr>`).join(""):'<tr><td colspan="6" class="empty">No demo referrals added yet.</td></tr>';
+ $("expenseList").innerHTML=expenses.length?expenses.map(e=>`<div class="expense-item"><div><strong>${esc(e.name)}</strong><div class="small">${esc(e.type)} expense</div></div><div style="display:flex;align-items:center;gap:12px"><strong>${money(e.amount)}</strong><button onclick="deleteExpense('${e.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No expenses recorded yet.</div>';
+ $("nextAction").textContent=total===0?"Add sample referrals to compare channel performance.":total<TARGET?`You need ${TARGET-total} more demo registrations. Review the strongest channel and focus outreach there.`:"The demo target is reached. For a real campaign, verify unique registrations before reporting success.";
+ $("bestChannel").textContent=data.some(d=>d.count>0)?data.reduce((a,b)=>b.count>a.count?b:a).name:"—";
+ renderInsights();
+}
+function renderInsights(){
+ const total=totalRegistrations(),spent=totalSpent(),data=byChannel().sort((a,b)=>b.count-a.count),top=data[0],needed=Math.max(0,TARGET-total);
+ let items=[];
+ if(total===0)items.push(["Start with tracking","Add illustrative referral records to compare channels. For the real campaign, connect the tracker to verified registration data."]);
+ else items.push(["Registration pace",needed===0?"The sample total meets the target; validate actual registrations before claiming success.":`The sample is ${total} of ${TARGET}. To close the ${needed} gap in the remaining plan, increase outreach through relevant student communities and ambassadors.`]);
+ if(top&&top.count>0)items.push(["Highest-volume demo channel",`${top.name} currently has ${top.count} sample referrals. Treat this as a demo observation—not evidence that the channel will perform best in the real campaign.`]);
+ if(spent===0)items.push(["Protect the budget","No expenses are recorded. Use the proposed ₹800 social promotion, ₹300 creative, ₹500 campus materials and ₹400 contingency split as a planning baseline."]);
+ else items.push(["Cost efficiency",total?`Recorded spend is ${money(spent)} across ${total} demo referrals (${money(spent/total)} each). This estimate is only meaningful when spend and verified registrations refer to the same period.`:"Expenses exist but there are no demo registrations yet, so cost per registration cannot be calculated."]);
+ items.push(["Improve measurement","Use unique referral codes or UTM tags, remove duplicate sign-ups, and compare verified registrations and cost by source before shifting spend."]);
+ $("insightList").innerHTML=items.map((x,i)=>`<div class="insight"><div class="insight-icon">${i+1}</div><div><strong>${esc(x[0])}</strong><p>${esc(x[1])}</p></div></div>`).join("");
+}
+$("referralForm").addEventListener("submit",e=>{e.preventDefault();const name=$("student").value.trim(),code=$("code").value.trim(),count=Number($("count").value),channel=$("channel").value;if(!name||!code||!Number.isInteger(count)||count<1||count>500)return;if(referrals.some(r=>r.code.toLowerCase()===code.toLowerCase())){alert("That demo referral code already exists. Use a unique code.");return}referrals.push({id:String(Date.now())+Math.random().toString(16).slice(2),name,code,count,channel});$("referralForm").reset();render();toast("Demo referral added.");});
+window.deleteReferral=id=>{referrals=referrals.filter(r=>r.id!==id);render();toast("Referral removed.");};
+$("resetReferrals").addEventListener("click",()=>{if(confirm("Clear all demo referrals?")){referrals=[];render();toast("Demo referrals cleared.");}});
+$("budgetForm").addEventListener("submit",e=>{e.preventDefault();const name=$("expenseName").value.trim(),amount=Number($("expenseAmount").value),type=$("expenseType").value;if(!name||!Number.isFinite(amount)||amount<=0||!Number.isInteger(amount)){alert("Enter a valid whole-number expense.");return}if(totalSpent()+amount>BUDGET){alert("This expense would exceed the ₹2,000 budget.");return}expenses.push({id:String(Date.now())+Math.random().toString(16).slice(2),name,amount,type});$("budgetForm").reset();render();toast("Expense recorded.");});
+window.deleteExpense=id=>{expenses=expenses.filter(e=>e.id!==id);render();toast("Expense removed.");};
+$("contentForm").addEventListener("submit",e=>{e.preventDefault();const type=$("contentType").value,audience=$("audience").value,tone=$("tone").value,link=$("link").value.trim();const cta=link?`Register here: ${link}`:"Add the official registration link here: [REGISTRATION LINK]";let text="";
+if(type==="whatsapp")text=`Hi everyone! 👋\n\nThere’s a free online workshop: “Build Your First AI Project in 60 Minutes.”\n\nIf you’re one of the ${audience}, this is a chance to explore a practical AI project in a beginner-friendly session. No need to overthink it—come curious and ready to learn!\n\n${cta}\n\nPlease check the official event details and share with interested classmates.`;
+if(type==="instagram")text=`🚀 Ready to explore AI by building something?\n\nJoin “Build Your First AI Project in 60 Minutes” — a free online workshop for ${audience}.\n\n✨ Learn by doing\n💡 Explore a practical AI project\n🎯 Take one step toward your AI journey\n\n${cta}\n\n#AI #EngineeringStudents #LearnByDoing #StudentWorkshop`;
+if(type==="ambassador")text=`Hi! We’re inviting student ambassadors to help spread the word about a free online workshop, “Build Your First AI Project in 60 Minutes.”\n\nIt’s aimed at ${audience}. Would you be willing to share the official registration link with relevant student groups or classmates who may be interested?\n\nWe’ll track outreach using unique referral codes and report verified registrations, not just message reach.\n\n${cta}\n\nThank you for helping students discover practical AI learning opportunities!`;
+if(type==="reminder")text=`Friendly reminder 👋\n\nInterested in “Build Your First AI Project in 60 Minutes”? It’s a free online workshop for ${audience}.\n\nIf you’d like to join, check the official event details and register using the link below. Please ignore this message if you’ve already registered.\n\n${cta}\n\nHope to see you there!`;
+if(type==="linkedin")text=`How can students take a first step into practical AI?\n\nA focused 60-minute project workshop can make the topic feel more approachable. “Build Your First AI Project in 60 Minutes” is a free online session for ${audience}.\n\nThe goal: move from curiosity toward hands-on learning. Interested students can review the official details and register here:\n${link||"[REGISTRATION LINK]"}\n\n#ArtificialIntelligence #Engineering #StudentLearning`;
+if(tone==="short and catchy")text=text.split("\n").filter(line=>line.trim()).slice(0,5).join("\n")+"\n\n"+cta;
+if(tone==="professional and clear")text=text.replace("Hi everyone! 👋","Hello everyone,").replace("🚀 Ready to explore AI by building something?","Explore practical AI in a focused 60-minute workshop.").replace("Hi! We’re inviting","Hello, we are inviting").replace("Friendly reminder 👋","Workshop reminder").replace("Hope to see you there!","Thank you for your interest.");
+$("contentOutput").textContent=text;$("contentOutput").classList.remove("placeholder");toast("Draft generated. Review before sharing.");});
+$("copyContent").addEventListener("click",async()=>{const text=$("contentOutput").textContent;if($("contentOutput").classList.contains("placeholder")){toast("Generate a draft first.");return}try{await navigator.clipboard.writeText(text);toast("Draft copied.");}catch(err){const range=document.createRange();range.selectNodeContents($("contentOutput"));const sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);toast("Text selected. Press Ctrl+C to copy.");}});
+$("clearContent").addEventListener("click",()=>{$("contentOutput").textContent="Your campaign message will appear here. Add the real workshop link before publishing.";$("contentOutput").classList.add("placeholder");});
+$("exportBtn").addEventListener("click",()=>{const rows=[["Record Type","Name","Code","Channel","Count/Amount","Expense Type"],...referrals.map(r=>["Demo referral",r.name,r.code,r.channel,r.count,""]),...expenses.map(e=>["Expense",e.name,"","",e.amount,e.type])];const csv=rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="growthpilot-demo-report.csv";a.click();URL.revokeObjectURL(url);toast("Demo CSV exported.");});
+$("resetAll").addEventListener("click",()=>{if(confirm("Clear all demo referrals and expenses?")){referrals=[];expenses=[];render();toast("All demo data cleared.");}});
+render();
+</script>
+</body>
+</html>
